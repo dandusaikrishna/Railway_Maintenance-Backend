@@ -1,6 +1,15 @@
 # KPA Forms API – Django Backend for Railway Maintenance Forms
 This backend project implements APIs using Django REST Framework to handle and validate railway maintenance forms, including bogie checksheets and wheel specifications, with structured data storage in PostgreSQL.
 
+## 📦 Features
+
+- Structured Django project with modular app design
+- Custom validation logic for all form fields
+- Environment-based PostgreSQL config via `.env`
+- Dockerized setup with `Dockerfile` and `docker-compose.yml`
+- Sample Postman collection with request/response mapping
+- Example API usage included in `README.md`
+
 ## 🛠️ Technologies Used
 - **Backend**: Python Django, Django REST Framework
 - **Database**: PostgreSQL

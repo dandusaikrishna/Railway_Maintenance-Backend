@@ -15,3 +15,7 @@ class WheelSpecificationGetSerializer(serializers.ModelSerializer):
     class Meta:
         model = WheelSpecification
         fields = '__all__'
+
+class LoginRequestSerializer(serializers.Serializer):
+    phone = serializers.CharField()
+    password = serializers.CharField()

@@ -7,6 +7,33 @@ from .serializers import BogieChecksheetSerializer, WheelSpecificationSerializer
 from .helpers.validation import validate_bogie_checksheet_fields, validate_wheel_specification_fields, validate_form_number, validate_date
 from .helpers.response_formatter import format_bogie_checksheet_response, format_wheel_specification_post_response, format_wheel_specification_get_response
 
+from .serializers import LoginRequestSerializer
+
+class LoginView(APIView):
+    def post(self, request):
+        serializer = LoginRequestSerializer(data=request.data)
+        if serializer.is_valid():
+            phone = serializer.validated_data['phone']
+            password = serializer.validated_data['password']
+            
+            if phone == "7760873976" and password == "to_share@123":
+                return Response({
+                    "success": True,
+                    "message": "Login successful.",
+                    "data": {
+                        "user_id": "user_id_123",
+                        "name": "Test User",
+                        "token": "fake-jwt-token"
+                    }
+                }, status=status.HTTP_200_OK)
+
+            return Response(
+                {"detail": "Invalid credentials"},
+                status=status.HTTP_401_UNAUTHORIZED
+            )
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 class BogieChecksheetView(APIView):
     """
     POST /api/forms/bogie-checksheet
@@ -16,146 +43,102 @@ class BogieChecksheetView(APIView):
             # Extract data from request
             data = request.data
             
-            # Validate required fields
-            bogie_details = data.get('bogieDetails', {})
-            bogie_checksheet = data.get('bogieChecksheet', {})
-            bmbc_checksheet = data.get('bmbcChecksheet', {})
+            # Helper function to handle date fields
+            def get_date_value(value):
+                if not value or value == '':
+                    return None
+                return value
             
-            is_valid, error_message = validate_bogie_checksheet_fields(bogie_details, bogie_checksheet, bmbc_checksheet)
-            if not is_valid:
-                return Response({
-                    'message': error_message,
-                    'success': False
-                }, status=status.HTTP_400_BAD_REQUEST)
-            
-            # Validate form number
-            is_valid, error_message = validate_form_number(data.get('formNumber', ''))
-            if not is_valid:
-                return Response({
-                    'message': error_message,
-                    'success': False
-                }, status=status.HTTP_400_BAD_REQUEST)
-            
-            # Validate inspection date
-            is_valid, error_message = validate_date(data.get('inspectionDate', ''))
-            if not is_valid:
-                return Response({
-                    'message': error_message,
-                    'success': False
-                }, status=status.HTTP_400_BAD_REQUEST)
-            
-            # Create BogieChecksheet instance
+            # BogieChecksheet instance 
             bogie_checksheet_obj = BogieChecksheet.objects.create(
-                # Bogie Details
-                bogie_no=bogie_details.get('bogieNo', ''),
-                date_of_ioh=bogie_details.get('dateOfIOH', ''),
-                incoming_div_and_date=bogie_details.get('incomingDivAndDate', ''),
-                maker_year_built=bogie_details.get('makerYearBuilt', ''),
-                deficit_components=bogie_details.get('deficitComponents', ''),
+
+                bogie_no=data.get('Bogie No.', '') or data.get('bogie_no', ''),
+                date_of_ioh=get_date_value(data.get('Date of IOH', '') or data.get('date_of_ioh', '')),
+                incoming_div_and_date=data.get('Incoming Div. & Date', '') or data.get('incoming_div_date', ''),
+                maker_year_built=data.get('Maker & Year Built', '') or data.get('maker_year_built', ''),
+                deficit_components=data.get('Deficit of component (if any)', '') or data.get('deficit_components', ''),
+
+                bogie_frame_condition=data.get('Bogie Frame Condition', '') or data.get('bogie_frame_condition', ''),
+                bolster=data.get('Bolster', '') or data.get('bolster', ''),
+                bolster_suspension_bracket=data.get('Bolster Suspension Bracket', '') or data.get('bolster_suspension_bracket', ''),
+                lower_spring_seat=data.get('Lower Spring Seat', '') or data.get('lower_spring_seat', ''),
+                axle_guide=data.get('Axle Guide', '') or data.get('axle_guide', ''),
                 
-                # Bogie Checksheet fields
-                axle_guide=bogie_checksheet.get('axleGuide', ''),
-                bogie_frame_condition=bogie_checksheet.get('bogieFrameCondition', ''),
-                bolster=bogie_checksheet.get('bolster', ''),
-                bolster_suspension_bracket=bogie_checksheet.get('bolsterSuspensionBracket', ''),
-                lower_spring_seat=bogie_checksheet.get('lowerSpringSeat', ''),
+
+                axle_guide_assembly=data.get('Axle Guide Assembly', ''),
+                protective_tubes=data.get('Protective Tubes', ''),
+                anchor_links=data.get('Anchor Links', ''),
+                side_bearer=data.get('Side Bearer', ''),
                 
-                # BMB Checksheet fields
-                adjusting_tube=bmbc_checksheet.get('adjustingTube', ''),
-                cylinder_body=bmbc_checksheet.get('cylinderBody', ''),
-                piston_trunnion=bmbc_checksheet.get('pistonTrunnion', ''),
-                plunger_spring=bmbc_checksheet.get('plungerSpring', ''),
+                # BMBC Checksheet
+                cylinder_body=data.get('Cylinder Body & Dome Cover', '') or data.get('cylinder_body', ''),
+                piston_trunnion=data.get('Piston & Trunnion Body', '') or data.get('piston_trunnion', ''),
+                adjusting_tube=data.get('Adjusting Tube and Screw', '') or data.get('adjusting_tube', ''),
+                plunger_spring=data.get('Plunger Spring', '') or data.get('plunger_spring', ''),
+            
+                tee_bolt_hex_nut=data.get('Tee Bolt, Hex Nut', ''),
+                pawl_and_pawl_spring=data.get('Pawl and Pawl Spring', ''),
+                dust_excluder=data.get('Dust Excluder', ''),
                 
                 # Metadata
-                form_number=data.get('formNumber', ''),
-                inspection_by=data.get('inspectionBy', ''),
-                inspection_date=data.get('inspectionDate', '')
+                form_number=data.get('form_number', ''),
+                inspection_by=data.get('inspection_by', ''),
+                inspection_date=get_date_value(data.get('inspection_date', ''))
             )
             
             # Format and return response
             response_data = format_bogie_checksheet_response(bogie_checksheet_obj)
             return Response(response_data, status=status.HTTP_201_CREATED)
             
-        except ValueError as e:
-            return Response({
-                'message': f'Invalid data format: {str(e)}',
-                'success': False
-            }, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
             return Response({
                 'message': f'Error submitting bogie checksheet: {str(e)}',
                 'success': False
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
+        
 class WheelSpecificationPostView(APIView):
     """
     POST /api/forms/wheel-specifications
     """
     def post(self, request):
         try:
-            # Extract data from request
+            # Extract data from request 
             data = request.data
             
-            # Validate required fields
-            fields = data.get('fields', {})
+            # Helper function to handle date fields
+            def get_date_value(value):
+                if not value or value == '':
+                    return None
+                return value
             
-            is_valid, error_message = validate_wheel_specification_fields(fields)
-            if not is_valid:
-                return Response({
-                    'message': error_message,
-                    'success': False
-                }, status=status.HTTP_400_BAD_REQUEST)
-            
-            # Validate form number
-            is_valid, error_message = validate_form_number(data.get('formNumber', ''))
-            if not is_valid:
-                return Response({
-                    'message': error_message,
-                    'success': False
-                }, status=status.HTTP_400_BAD_REQUEST)
-            
-            # Validate submitted date
-            is_valid, error_message = validate_date(data.get('submittedDate', ''))
-            if not is_valid:
-                return Response({
-                    'message': error_message,
-                    'success': False
-                }, status=status.HTTP_400_BAD_REQUEST)
-            
-            # Create WheelSpecification instance
+            #  WheelSpecification instance 
             wheel_spec = WheelSpecification.objects.create(
-                # Wheel specification fields
-                axle_box_housing_bore_dia=fields.get('axleBoxHousingBoreDia', ''),
-                bearing_seat_diameter=fields.get('bearingSeatDiameter', ''),
-                condemning_dia=fields.get('condemningDia', ''),
-                intermediate_wwp=fields.get('intermediateWWP', ''),
-                last_shop_issue_size=fields.get('lastShopIssueSize', ''),
-                roller_bearing_bore_dia=fields.get('rollerBearingBoreDia', ''),
-                roller_bearing_outer_dia=fields.get('rollerBearingOuterDia', ''),
-                roller_bearing_width=fields.get('rollerBearingWidth', ''),
-                tread_diameter_new=fields.get('treadDiameterNew', ''),
-                variation_same_axle=fields.get('variationSameAxle', ''),
-                variation_same_bogie=fields.get('variationSameBogie', ''),
-                variation_same_coach=fields.get('variationSameCoach', ''),
-                wheel_disc_width=fields.get('wheelDiscWidth', ''),
-                wheel_gauge=fields.get('wheelGauge', ''),
-                wheel_profile=fields.get('wheelProfile', ''),
+                tread_diameter_new=data.get('Tread Diameter (New)', '') or data.get('tread_diameter', ''),
+                last_shop_issue_size=data.get('Last Shop Issue Size (Dia.)', '') or data.get('last_shop_issue', ''),
+                condemning_dia=data.get('Condemning Dia.', '') or data.get('condemning_dia', ''),
+                wheel_gauge=data.get('Wheel Gauge (IFD)', '') or data.get('wheel_gauge', ''),
+                variation_same_axle=data.get('Variation Same Axle', '') or data.get('variation_same_axle', ''),
+                variation_same_bogie=data.get('Variation Same Bogie', '') or data.get('variation_same_bogie', ''),
+                variation_same_coach=data.get('Variation Same Coach', '') or data.get('variation_same_coach', ''),
+                wheel_profile=data.get('Wheel Profile', '') or data.get('wheel_profile', ''),
+                intermediate_wwp=data.get('Intermediate WWP', '') or data.get('intermediate_wwp', ''),
+                bearing_seat_diameter=data.get('Bearing Seat Diameter', '') or data.get('bearing_seat_diameter', ''),
+                roller_bearing_outer_dia=data.get('Roller Bearing Outer Dia.', '') or data.get('roller_bearing_outer_dia', ''),
+                roller_bearing_bore_dia=data.get('Roller Bearing Bore Dia.', '') or data.get('roller_bearing_bore_dia', ''),
+                roller_bearing_width=data.get('Roller Bearing Width', '') or data.get('roller_bearing_width', ''),
+                axle_box_housing_bore_dia=data.get('Axle Box Housing Bore Dia.', '') or data.get('axle_box_housing_bore_dia', ''),
+                wheel_disc_width=data.get('Wheel Disc Width', '') or data.get('wheel_disc_width', ''),
                 
                 # Metadata
-                form_number=data.get('formNumber', ''),
-                submitted_by=data.get('submittedBy', ''),
-                submitted_date=data.get('submittedDate', '')
+                form_number=data.get('form_number', ''),
+                submitted_by=data.get('submitted_by', ''),
+                submitted_date=get_date_value(data.get('submitted_date', ''))
             )
             
             # Format and return response
             response_data = format_wheel_specification_post_response(wheel_spec)
             return Response(response_data, status=status.HTTP_201_CREATED)
             
-        except ValueError as e:
-            return Response({
-                'message': f'Invalid data format: {str(e)}',
-                'success': False
-            }, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
             return Response({
                 'message': f'Error submitting wheel specification: {str(e)}',

@@ -1,11 +1,10 @@
-# 🚄 KPA Forms API – Django Backend for Railway Maintenance Forms
-This backend system implements APIs for processing railway maintenance forms using Django REST Framework. It handles bogie checksheet and wheel specification forms with proper validation and data storage.
+# KPA Forms API – Django Backend for Railway Maintenance Forms
+This backend project implements APIs using Django REST Framework to handle and validate railway maintenance forms, including bogie checksheets and wheel specifications, with structured data storage in PostgreSQL.
 
 ## 🛠️ Technologies Used
 - **Backend**: Python Django, Django REST Framework
 - **Database**: PostgreSQL
 - **Deployment**: Gunicorn, Docker & Docker Compose
-- **Configuration**: python-decouple for environment management
 
 ## 📋 Setup Instructions
 
@@ -78,25 +77,16 @@ This backend system implements APIs for processing railway maintenance forms usi
 
 ## 🚀 Django-Powered Architecture
 **Framework**: Django with Django REST Framework
-**Endpoints**: 
-- `POST /api/forms/bogie-checksheet` – Submit bogie checksheet data
-- `POST /api/forms/wheel-specifications` – Submit wheel specification data
-- `GET /api/forms/wheel-specifications/list` – Retrieve wheel specifications with filters
+
+## 📄 API Endpoints
+
+| Endpoint                                 | Method | Description                                              |
+|------------------------------------------|--------|----------------------------------------------------------|
+| `/api/forms/bogie-checksheet`            | POST   | Submit bogie checksheet data with validation            |
+| `/api/forms/wheel-specifications`        | POST   | Submit wheel specification data with validation          |
+| `/api/forms/wheel-specifications/list`   | GET    | Retrieve wheel specifications with optional query parameter filters     |
 
 **Schema Models**: Uses Django models for data validation and storage
-
-## 📄 Endpoint Overview
-**POST /api/forms/bogie-checksheet**
-Accepts bogie checksheet data with validation
-Returns success response with saved data reference
-
-**POST /api/forms/wheel-specifications**
-Accepts wheel specification data with validation
-Returns success response with saved data reference
-
-**GET /api/forms/wheel-specifications/list**
-Retrieves wheel specifications with optional filters
-Supports filtering by formNumber, submittedBy, and submittedDate
 
 ## ⚙️ Processing Pipeline
 ### Form Validation
@@ -149,6 +139,146 @@ These are the validation rules implemented in the system:
 ### Form Number Validation
 ``` Validate form number is present and not too short ```
 
+
+## 🧪 Running Tests
+```bash
+python manage.py test
+```
+
+## 📬 Example API Usage
+
+### 1. Submit Wheel Specification (POST)
+**URL:** `/api/forms/wheel-specifications`  
+**Method:** POST  
+**Request Body:**
+```json
+{
+  "fields": {
+    "axleBoxHousingBoreDia": "280 (+0.030/+0.052)",
+    "bearingSeatDiameter": "130.043 TO 130.068",
+    "condemningDia": "825 (800-900)",
+    "intermediateWWP": "20 TO 28",
+    "lastShopIssueSize": "837 (800-900)",
+    "rollerBearingBoreDia": "130 (+0.0/-0.025)",
+    "rollerBearingOuterDia": "280 (+0.0/-0.035)",
+    "rollerBearingWidth": "93 (+0/-0.250)",
+    "treadDiameterNew": "915 (900-1000)",
+    "variationSameAxle": "0.5",
+    "variationSameBogie": "5",
+    "variationSameCoach": "13",
+    "wheelDiscWidth": "127 (+4/-0)",
+    "wheelGauge": "1600 (+2,-1)",
+    "wheelProfile": "29.4 Flange Thickness"
+  },
+  "formNumber": "WHEEL-2025-001",
+  "submittedBy": "user_id_123",
+  "submittedDate": "2025-07-03"
+}
+```
+
+**Response:**
+```json
+{
+  "data": {
+    "formNumber": "WHEEL-2025-001",
+    "status": "Saved",
+    "submittedBy": "user_id_123",
+    "submittedDate": "2025-07-03"
+  },
+  "message": "Wheel specification submitted successfully.",
+  "success": true
+}
+```
+
+### 2. Submit Bogie Checksheet (POST)
+**URL:** `/api/forms/bogie-checksheet`  
+**Method:** POST  
+**Request Body:**
+```json
+{
+  "bogieDetails": {
+    "bogieNo": "BG1234",
+    "dateOfIOH": "2025-07-01",
+    "deficitComponents": "None",
+    "incomingDivAndDate": "NR / 2025-06-25",
+    "makerYearBuilt": "RDSO/2018"
+  },
+  "bogieChecksheet": {
+    "axleGuide": "Worn",
+    "bogieFrameCondition": "Good",
+    "bolster": "Good",
+    "bolsterSuspensionBracket": "Cracked",
+    "lowerSpringSeat": "Good"
+  },
+  "bmbcChecksheet": {
+    "adjustingTube": "DAMAGED",
+    "cylinderBody": "WORN OUT",
+    "pistonTrunnion": "GOOD",
+    "plungerSpring": "GOOD"
+  },
+  "formNumber": "BOGIE-2025-001",
+  "inspectionBy": "user_id_456",
+  "inspectionDate": "2025-07-03"
+}
+```
+
+**Response:**
+```json
+{
+  "data": {
+    "formNumber": "BOGIE-2025-001",
+    "inspectionBy": "user_id_456",
+    "inspectionDate": "2025-07-03",
+    "status": "Saved"
+  },
+  "message": "Bogie checksheet submitted successfully.",
+  "success": true
+}
+```
+
+### 3. Get Wheel Specifications (GET)
+**URL:** `/api/forms/wheel-specifications/list`  
+**Method:** GET  
+**Query Parameters:**
+- `formNumber` (optional): Filter by form number
+- `submittedBy` (optional): Filter by submitter
+- `submittedDate` (optional): Filter by submission date
+
+**Response:**
+```json
+{
+  "data": [
+    {
+      "fields": {
+        "axleBoxHousingBoreDia": "280 (+0.030/+0.052)",
+        "bearingSeatDiameter": "130.043 TO 130.068",
+        "condemningDia": "825 (800-900)",
+        "intermediateWWP": "20 TO 28",
+        "lastShopIssueSize": "837 (800-900)",
+        "rollerBearingBoreDia": "130 (+0.0/-0.025)",
+        "rollerBearingOuterDia": "280 (+0.0/-0.035)",
+        "rollerBearingWidth": "93 (+0/-0.250)",
+        "treadDiameterNew": "915 (900-1000)",
+        "variationSameAxle": "0.5",
+        "variationSameBogie": "5",
+        "variationSameCoach": "13",
+        "wheelDiscWidth": "127 (+4/-0)",
+        "wheelGauge": "1600 (+2,-1)",
+        "wheelProfile": "29.4 Flange Thickness"
+      },
+      "formNumber": "WHEEL-2025-001",
+      "submittedBy": "user_id_123",
+      "submittedDate": "2025-07-03"
+    }
+  ],
+  "message": "Filtered wheel specification forms fetched successfully.",
+  "success": true
+}
+```
+
+## 📎 Resources
+
+- [Postman Collection](KPA_form_data.postman_collection.json)
 
 ## ⚠️ Assumptions and Limitations
 1. PostgreSQL database is required and must be configured

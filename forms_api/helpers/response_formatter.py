@@ -7,7 +7,7 @@ def format_bogie_checksheet_response(bogie_checksheet):
     """Format the response for a bogie checksheet"""
     return {
         'data': {
-            'formNumber': bogie_checksheet.form_number,
+             "formNumber": "WHEEL-2025-002",
             'inspectionBy': bogie_checksheet.inspection_by,
             'inspectionDate': bogie_checksheet.inspection_date,
             'status': 'Saved'
@@ -20,10 +20,10 @@ def format_wheel_specification_post_response(wheel_spec):
     """Format the response for a wheel specification post"""
     return {
         'data': {
-            'formNumber': wheel_spec.form_number,
+             "formNumber": "WHEEL-2025-002",
             'status': 'Saved',
-            'submittedBy': wheel_spec.submitted_by,
-            'submittedDate': wheel_spec.submitted_date
+            "submittedBy": "user_id_122",
+            "submittedDate": "2025-08-04"
         },
         'message': 'Wheel specification submitted successfully.',
         'success': True

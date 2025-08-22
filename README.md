@@ -287,6 +287,7 @@ python manage.py test
 
 ## 📎 Resources
 
+=======
 - [Postman Collection](https://drive.google.com/file/d/1-A6R_Paf6DYv2s4L8zza_fCkPygGduqf/view)
 
 

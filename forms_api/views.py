@@ -1,3 +1,4 @@
+import logging
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -9,14 +10,20 @@ from .helpers.response_formatter import format_bogie_checksheet_response, format
 
 from .serializers import LoginRequestSerializer
 
+# Get logger
+logger = logging.getLogger('forms_api')
+
 class LoginView(APIView):
     def post(self, request):
+        logger.info(f"Login attempt - Phone: {request.data.get('phone', 'N/A')}")
+        
         serializer = LoginRequestSerializer(data=request.data)
         if serializer.is_valid():
             phone = serializer.validated_data['phone']
             password = serializer.validated_data['password']
             
             if phone == "7760873976" and password == "to_share@123":
+                logger.info(f"Login successful for phone: {phone}")
                 return Response({
                     "success": True,
                     "message": "Login successful.",
@@ -27,11 +34,13 @@ class LoginView(APIView):
                     }
                 }, status=status.HTTP_200_OK)
 
+            logger.warning(f"Invalid credentials for phone: {phone}")
             return Response(
                 {"detail": "Invalid credentials"},
                 status=status.HTTP_401_UNAUTHORIZED
             )
 
+        logger.warning(f"Login validation failed: {serializer.errors}")
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class BogieChecksheetView(APIView):
@@ -40,6 +49,8 @@ class BogieChecksheetView(APIView):
     """
     def post(self, request):
         try:
+            logger.info(f"Bogie checksheet submission - Form: {request.data.get('form_number', 'N/A')}")
+            
             # Extract data from request
             data = request.data
             
@@ -86,11 +97,14 @@ class BogieChecksheetView(APIView):
                 inspection_date=get_date_value(data.get('inspection_date', ''))
             )
             
+            logger.info(f"Bogie checksheet created successfully - ID: {bogie_checksheet_obj.id}, Form: {bogie_checksheet_obj.form_number}")
+            
             # Format and return response
             response_data = format_bogie_checksheet_response(bogie_checksheet_obj)
             return Response(response_data, status=status.HTTP_201_CREATED)
             
         except Exception as e:
+            logger.error(f"Error submitting bogie checksheet: {str(e)} - Form: {request.data.get('form_number', 'N/A')}")
             return Response({
                 'message': f'Error submitting bogie checksheet: {str(e)}',
                 'success': False
@@ -102,6 +116,8 @@ class WheelSpecificationPostView(APIView):
     """
     def post(self, request):
         try:
+            logger.info(f"Wheel specification submission - Form: {request.data.get('form_number', 'N/A')}")
+            
             # Extract data from request 
             data = request.data
             
@@ -135,11 +151,14 @@ class WheelSpecificationPostView(APIView):
                 submitted_date=get_date_value(data.get('submitted_date', ''))
             )
             
+            logger.info(f"Wheel specification created successfully - ID: {wheel_spec.id}, Form: {wheel_spec.form_number}")
+            
             # Format and return response
             response_data = format_wheel_specification_post_response(wheel_spec)
             return Response(response_data, status=status.HTTP_201_CREATED)
             
         except Exception as e:
+            logger.error(f"Error submitting wheel specification: {str(e)} - Form: {request.data.get('form_number', 'N/A')}")
             return Response({
                 'message': f'Error submitting wheel specification: {str(e)}',
                 'success': False
@@ -152,6 +171,8 @@ class WheelSpecificationGetView(APIView):
     """
     def get(self, request):
         try:
+            logger.info(f"Fetching wheel specifications - Filters: formNumber={request.query_params.get('formNumber', 'None')}, submittedBy={request.query_params.get('submittedBy', 'None')}, submittedDate={request.query_params.get('submittedDate', 'None')}")
+            
             # Get query parameters for filtering
             form_number = request.query_params.get('formNumber', None)
             submitted_by = request.query_params.get('submittedBy', None)
@@ -168,11 +189,14 @@ class WheelSpecificationGetView(APIView):
             if submitted_date:
                 queryset = queryset.filter(submitted_date=submitted_date)
             
+            logger.info(f"Found {queryset.count()} wheel specification records matching the filters")
+            
             # Format the response
             response_data = format_wheel_specification_get_response(queryset)
             return Response(response_data, status=status.HTTP_200_OK)
             
         except Exception as e:
+            logger.error(f"Error fetching wheel specifications: {str(e)}")
             return Response({
                 'message': f'Error fetching wheel specifications: {str(e)}',
                 'success': False

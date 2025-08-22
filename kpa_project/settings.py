@@ -52,6 +52,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'kpa_project.middleware.RequestResponseLoggingMiddleware',
 ]
 
 ROOT_URLCONF = 'kpa_project.urls'

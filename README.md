@@ -287,7 +287,9 @@ python manage.py test
 
 ## 📎 Resources
 
-- [Postman Collection](https://drive.google.com/file/d/1-A6R_Paf6DYv2s4L8zza_fCkPygGduqf/view?usp=drive_link)
+=======
+- [Postman Collection](https://drive.google.com/file/d/1-A6R_Paf6DYv2s4L8zza_fCkPygGduqf/view)
+
 
 ## ⚠️ Assumptions and Limitations
 1. PostgreSQL database is required and must be configured

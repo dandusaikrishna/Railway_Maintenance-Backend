@@ -17,9 +17,10 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 RUN chown -R appuser:appuser /app
 
+# Switch to non-root user
 USER appuser
 
 EXPOSE 8000
 
-# Gunicorn command
+# Gunicorn command (fixed newline issue)
 CMD ["gunicorn", "--bind", "0.0.0.0:8000", "kpa_project.wsgi:application", "--workers", "3"]

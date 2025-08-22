@@ -23,4 +23,5 @@ USER appuser
 EXPOSE 8000
 
 # Gunicorn command (fixed newline issue)
-CMD ["gunicorn", "--bind", "0.0.0.0:8000", "kpa_project.wsgi:application", "--workers", "3"]
+CMD ["gunicorn", "--bind", "0.0.0.0:8000", "kpa_project.wsgi:application", "--workers", "1", "--timeout", "120"]
+

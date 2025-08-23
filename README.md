@@ -58,14 +58,34 @@ This backend project implements APIs using Django REST Framework to handle and v
    python manage.py runserver
    ```
 
-### Docker Setup (Alternative)
+### 🛠️ Docker Setup (Alternative)
 
-1. Ensure Docker and Docker Compose are installed
-2. Run the application:
+1. **Clone the Repository**
+   ```bash
+   git clone <your-repo-url>
+   cd <repo-folder>
+   ```
+
+2. **Build and Start the Containers**
    ```bash
    docker-compose up --build
    ```
-3. Access at `http://localhost:8000`
+
+👉 This will:
+- Build the Docker image using the Dockerfile
+- Start the Django backend container
+- Start the PostgreSQL database container (if configured in docker-compose.yml)
+
+3. **Access the Application**
+   Once containers are running, the API will be available at:
+   ```
+   http://localhost:8000
+   ```
+
+🔗 **Example Endpoints:**
+- `GET /api/forms/wheel-specifications/list` → Fetch wheel specifications
+- `POST /api/forms/bogie-checksheet` → Create bogie checksheet
+- `POST /api/forms/wheel-specifications` → Create wheel specification
 
 ### AWS Deployment
 

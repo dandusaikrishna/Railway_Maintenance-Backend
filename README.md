@@ -7,13 +7,14 @@ This backend project implements APIs using Django REST Framework to handle and v
 - Custom validation logic for all form fields
 - Environment-based PostgreSQL config via `.env`
 - Dockerized setup with `Dockerfile` and `docker-compose.yml`
+- Deployment on AWS EC2 with RDS for PostgreSQL
 - Sample Postman collection with request/response mapping
 - Example API usage included in `README.md`
 
 ## 🛠️ Technologies Used
 - **Backend**: Python Django, Django REST Framework
 - **Database**: PostgreSQL
-- **Deployment**: Gunicorn, Docker & Docker Compose
+- **Deployment**: Gunicorn, Docker & Docker Compose, AWS EC2, AWS RDS
 
 ## 📋 Setup Instructions
 
@@ -21,7 +22,7 @@ This backend project implements APIs using Django REST Framework to handle and v
 - Python 3.8+
 - PostgreSQL database
 - pip (Python package installer)
-- Docker & Docker Compose (optional)
+- Docker & Docker Compose
 
 ### Installation
 
@@ -65,6 +66,21 @@ This backend project implements APIs using Django REST Framework to handle and v
    docker-compose up --build
    ```
 3. Access at `http://localhost:8000`
+
+### AWS Deployment
+
+1. **Set up an EC2 instance**:
+   - Launch an EC2 instance with the desired configuration.
+   - Ensure security groups allow traffic on port 8000.
+
+2. **Set up RDS for PostgreSQL**:
+   - Create an RDS instance for PostgreSQL.
+   - Configure security groups to allow access from the EC2 instance.
+
+3. **Deploy the application**:
+   - SSH into the EC2 instance.
+   - Clone the repository and follow the Docker setup instructions.
+   - Ensure environment variables are set in the `.env` file.
 
 ## 📁 Project Structure
 ```
@@ -147,7 +163,6 @@ These are the validation rules implemented in the system:
 
 ### Form Number Validation
 ``` Validate form number is present and not too short ```
-
 
 ## 🧪 Running Tests
 ```bash
@@ -287,9 +302,7 @@ python manage.py test
 
 ## 📎 Resources
 
-=======
 - [Postman Collection](https://drive.google.com/file/d/1-A6R_Paf6DYv2s4L8zza_fCkPygGduqf/view)
-
 
 ## ⚠️ Assumptions and Limitations
 1. PostgreSQL database is required and must be configured

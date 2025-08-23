@@ -9,6 +9,14 @@
 [![AWS](https://img.shields.io/badge/AWS-EC2%20%7C%20RDS-orange.svg)](https://aws.amazon.com)
 
 ---
+## 🎥 Video Tutorials
+
+| Tutorial | Link | Description |
+|----------|------|-------------|
+| 🚀 **Setup & Development** | [Watch Now](https://drive.google.com/file/d/17QCv4pfbuGwF-YY-i1CHJYKyUKcSJ8ya/view?usp=sharing) | Initial setup, configuration & API testing |
+| 🐳 **Docker & AWS Deployment** | [Watch Now](https://drive.google.com/file/d/1pbGgeTAep39GuDYdNK1tmojN1PWTQ1Fv/view?usp=drive_link) | Containerization, AWS deployment & logging |
+
+---
 
 ## 🎯 Overview
 
@@ -152,52 +160,6 @@ kpa-forms-api/
 | `/api/forms/bogie-checksheet` | `POST` | Submit bogie checksheet with validation | ✅ Active |
 | `/api/forms/wheel-specifications` | `POST` | Submit wheel specification data | ✅ Active |
 | `/api/forms/wheel-specifications/list` | `GET` | Retrieve wheel specifications with filters | ✅ Active |
-
-### 🔍 Query Parameters
-
-**For `/wheel-specifications/list`:**
-- `formNumber` - Filter by specific form number
-- `submittedBy` - Filter by user ID
-- `submittedDate` - Filter by submission date (YYYY-MM-DD)
-
----
-
-## 🛡️ Validation Framework
-
-### 📋 Bogie Checksheet Validation
-
-```python
-# Bogie Details
-✓ bogieNo              # Required, alphanumeric
-✓ dateOfIOH            # Date format (YYYY-MM-DD)
-✓ incomingDivAndDate   # Division and date format
-✓ makerYearBuilt       # Manufacturer and year
-
-# Checksheet Fields
-✓ axleGuide            # Condition assessment
-✓ bogieFrameCondition  # Frame status
-✓ bolster              # Bolster condition
-✓ bolsterSuspensionBracket  # Bracket status
-✓ lowerSpringSeat      # Spring seat condition
-```
-
-### 🎯 Wheel Specification Validation
-
-```python
-# Critical Measurements
-✓ axleBoxHousingBoreDia    # Housing diameter specs
-✓ bearingSeatDiameter      # Bearing seat measurements
-✓ condemningDia            # Condemning diameter limits
-✓ treadDiameterNew         # New tread diameter
-✓ wheelGauge               # Gauge specifications
-
-# Tolerance Validations
-✓ variationSameAxle        # Same axle variation limits
-✓ variationSameBogie       # Same bogie variation limits
-✓ variationSameCoach       # Same coach variation limits
-```
-
----
 
 ## 📘 API Usage Examples
 
@@ -391,9 +353,6 @@ coverage report
 | Resource | Link | Description |
 |----------|------|-------------|
 | 📮 **Postman Collection** | [Download](https://drive.google.com/file/d/1-A6R_Paf6DYv2s4L8zza_fCkPygGduqf/view) | Complete API testing collection |
-| 📖 **Django Docs** | [djangoproject.com](https://djangoproject.com) | Framework documentation |
-| 🐘 **PostgreSQL Guide** | [postgresql.org](https://postgresql.org) | Database documentation |
-| ☁️ **AWS Documentation** | [aws.amazon.com](https://aws.amazon.com) | Cloud deployment guides |
 
 ---
 

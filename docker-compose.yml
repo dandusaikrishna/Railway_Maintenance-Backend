@@ -37,7 +37,6 @@ services:
       - DD_LOGS_ENABLED=true
       - DD_PROCESS_AGENT_ENABLED=false  # Disable to reduce warnings
       - DD_SITE=${DD_SITE}
-      - DD_LOG_LEVEL=warn  # Only warnings and errors
       - DD_DOGSTATSD_NON_LOCAL_TRAFFIC=true
       # Enable container log collection
       - DD_LOGS_CONFIG_CONTAINER_COLLECT_ALL=true

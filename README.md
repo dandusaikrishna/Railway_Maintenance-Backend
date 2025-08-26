@@ -1,11 +1,12 @@
 # KPA Forms API – Django Backend for Railway Maintenance Forms
 
-> A Django-powered REST API backend for managing railway maintenance forms with comprehensive validation and PostgreSQL integration.
+> A Django-powered REST API backend for managing railway maintenance forms with comprehensive validation, PostgreSQL integration, and Datadog monitoring.
 
-[![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)](https://python.org)
-[![Django](https://img.shields.io/badge/Django-REST-green.svg)](https://djangorestframework.org)
+[![Python](https://img.shields.io/badge/Python-3.9+-blue.svg)](https://python.org)
+[![Django](https://img.shields.io/badge/Django-5.2.4-green.svg)](https://djangorestframework.org)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Database-blue.svg)](https://postgresql.org)
 [![Docker](https://img.shields.io/badge/Docker-Containerized-blue.svg)](https://docker.com)
+[![Datadog](https://img.shields.io/badge/Datadog-Monitoring-purple.svg)](https://datadoghq.com)
 [![AWS](https://img.shields.io/badge/AWS-EC2%20%7C%20RDS-orange.svg)](https://aws.amazon.com)
 
 ---
@@ -28,6 +29,7 @@ The **KPA Forms API** is a robust Django REST Framework backend designed specifi
 - **🏗️ Modular Architecture** - Clean separation of concerns with Django apps
 - **🐘 PostgreSQL Integration** - Reliable data storage with advanced querying capabilities  
 - **🐳 Containerized Deployment** - Docker-ready with production configurations
+- **📊 Advanced Monitoring** - Integrated Datadog APM and logging for production insights
 - **☁️ Cloud-Native** - Optimized for AWS EC2 and RDS deployment
 - **📋 API Documentation** - Complete Postman collection with examples
 
@@ -39,7 +41,7 @@ The **KPA Forms API** is a robust Django REST Framework backend designed specifi
 
 Before you begin, ensure you have the following installed:
 
-- **Python 3.8+**
+- **Python 3.9+**
 - **PostgreSQL 12+**
 - **Docker & Docker Compose** (for containerized setup)
 - **pip** (Python package manager)
@@ -71,17 +73,21 @@ python manage.py migrate
 python manage.py runserver
 ```
 
-#### Option 2: Docker Setup (Recommended)
+#### Option 2: Docker Setup with Monitoring (Recommended)
 
 ```bash
 # 1. Clone the repository
 git clone <repository-url>
-cd kpa-form-api-development
+cd kpa-forms-api
 
-# 2. Build and start containers
+# 2. Configure environment variables
+cp .env.example .env
+# Add your Datadog API key and other configurations
+
+# 3. Build and start containers with monitoring
 docker-compose up --build
 
-# 3. Access the API
+# 4. Access the API
 # http://localhost:8000
 ```
 
@@ -94,9 +100,9 @@ docker-compose up --build
 <td>
 
 **Backend Framework**
-- Django 4.2+
+- Django 5.2.4
 - Django REST Framework
-- Python 3.8+
+- Python 3.9+
 
 </td>
 <td>
@@ -111,18 +117,30 @@ docker-compose up --build
 <tr>
 <td>
 
+**Monitoring & Logging**
+- Datadog APM
+- Structured JSON logging
+- Request/Response middleware
+- Error tracking & alerts
+
+</td>
+<td>
+
 **Infrastructure**
 - Docker & Docker Compose
 - Gunicorn WSGI server
 - Environment-based config
 
 </td>
-<td>
+</tr>
+<tr>
+<td colspan="2">
 
 **Deployment**
 - AWS EC2 instances
 - AWS RDS PostgreSQL
-- Production-ready setup
+- Production-ready monitoring
+- Automated log aggregation
 
 </td>
 </tr>
@@ -145,8 +163,17 @@ kpa-forms-api/
 │   ├──  views.py                    # API view classes
 │   └── 🧪 tests.py                  # Unit tests
 ├── ⚙️ kpa_project/                  # Django project settings
+│   ├── logging_config.py            # Comprehensive logging setup
+│   ├── middleware.py                # Request/Response logging
+│   └── settings.py                  # Django configuration
+├── 📁 logs/                         # Application logs
+│   ├── django.log                   # General Django logs
+│   ├── requests.log                 # HTTP request logs
+│   ├── forms_api.log               # API-specific logs
+│   ├── database.log                # Database query logs
+│   └── errors.log                  # Error logs
 ├── 🐳 Dockerfile                    # Container configuration
-├── 🔧 docker-compose.yml            # Multi-container setup
+├── 🔧 docker-compose.yml            # Multi-container setup with Datadog
 ├── 📋 requirements.txt              # Python dependencies
 └── 📖 README.md                     # Project documentation
 ```
@@ -253,12 +280,48 @@ kpa-forms-api/
       "submittedDate": "2025-07-03",
       "fields": {
         "axleBoxHousingBoreDia": "280 (+0.030/+0.052)",
-        "bearingSeatDiameter": "130.043 TO 130.068",
+        "bearingSeatDiameter": "130.043 TO 130.068"
         // ... additional fields
       }
     }
   ]
 }
+```
+
+---
+
+## 📊 Monitoring & Logging
+
+### Datadog Integration
+
+The application includes comprehensive monitoring and logging through Datadog:
+
+- **APM (Application Performance Monitoring)** - Track request performance and database queries
+- **Log Management** - Centralized logging with structured JSON format
+- **Error Tracking** - Automatic error detection and alerting
+- **Custom Metrics** - Business-specific metrics and dashboards
+
+### Log Categories
+
+| Log Type | File | Description |
+|----------|------|-------------|
+| **General** | `django.log` | Django framework logs |
+| **Requests** | `requests.log` | HTTP request/response logs |
+| **API** | `forms_api.log` | Application-specific logs |
+| **Database** | `database.log` | Database query logs |
+| **Errors** | `errors.log` | Error and exception logs |
+
+### Environment Configuration
+
+```bash
+# Datadog Configuration
+DD_API_KEY=your-datadog-api-key
+DD_ENV=development
+DD_SERVICE=kpa-django-app
+DD_VERSION=1.0.0
+DD_AGENT_HOST=datadog-agent
+DD_AGENT_PORT=8126
+DD_SITE=datadoghq.com
 ```
 
 ---
@@ -292,6 +355,7 @@ aws rds create-db-instance \
    - Allow HTTP/HTTPS traffic (ports 80, 443)
    - Allow SSH access (port 22)
    - Configure RDS security group for PostgreSQL (port 5432)
+   - Allow Datadog agent communication (ports 8125, 8126)
 
 2. **Environment Setup**
    ```bash
@@ -303,21 +367,32 @@ aws rds create-db-instance \
    sudo yum install -y docker
    sudo systemctl start docker
    
-   # Deploy application
+   # Deploy application with monitoring
    git clone <your-repo>
    cd kpa-forms-api
    docker-compose up -d
    ```
 
-3. **Environment Variables**
+3. **Production Environment Variables**
    ```bash
    # .env configuration for production
+   DEBUG=False
+   SECRET_KEY=your-production-secret-key
+   ALLOWED_HOSTS=your-domain.com,your-ec2-ip
+   
+   # Database Configuration
    DB_HOST=your-rds-endpoint.amazonaws.com
    DB_NAME=kpa_forms_db
    DB_USER=admin
    DB_PASSWORD=your-secure-password
-   DEBUG=False
-   ALLOWED_HOSTS=your-domain.com,your-ec2-ip
+   DB_PORT=5432
+   
+   # Datadog Configuration
+   DD_API_KEY=your-datadog-api-key
+   DD_ENV=production
+   DD_SERVICE=kpa-django-app
+   DD_VERSION=1.0.0
+   DD_SITE=datadoghq.com
    ```
 
 ---
@@ -345,6 +420,7 @@ coverage report
 - **🔗 Integration Tests** - API endpoint testing  
 - **📊 Data Validation Tests** - Form field validation
 - **🔒 Authentication Tests** - Security validation
+- **🖥️ Monitoring Tests** - Logging and metrics validation
 
 ---
 
@@ -353,6 +429,51 @@ coverage report
 | Resource | Link | Description |
 |----------|------|-------------|
 | 📮 **Postman Collection** | [Download](https://drive.google.com/file/d/1-A6R_Paf6DYv2s4L8zza_fCkPygGduqf/view) | Complete API testing collection |
+| 📊 **Datadog Dashboard** | [View Dashboard](https://app.datadoghq.com) | Production monitoring dashboard |
+
+---
+
+## 🔧 Development
+
+### Local Development with Monitoring
+
+```bash
+# Start with local Datadog agent
+docker-compose -f docker-compose.dev.yml up
+
+# Or start without monitoring
+python manage.py runserver
+```
+
+### Adding New Form Types
+
+1. Create model in `models.py`
+2. Add serializer in `serializers.py`
+3. Create validation logic in `helpers/validation.py`
+4. Add API views in `views.py`
+5. Update URL routing in `urls.py`
+6. Add logging statements for monitoring
+
+### Logging Best Practices
+
+```python
+import logging
+
+# Get logger for your module
+logger = logging.getLogger('forms_api')
+
+# Log important events
+logger.info("Processing form submission", extra={
+    'form_number': form_number,
+    'user_id': user_id
+})
+
+# Log errors with context
+logger.error("Form validation failed", extra={
+    'form_number': form_number,
+    'errors': validation_errors
+})
+```
 
 ---
 
@@ -360,9 +481,10 @@ coverage report
 
 ### System Requirements
 - ✅ PostgreSQL database is required and must be properly configured
-- ✅ Environment variables must be set for database connectivity
+- ✅ Environment variables must be set for database connectivity and monitoring
 - ✅ Docker containers require sufficient system resources
 - ✅ AWS deployment requires proper IAM permissions
+- ✅ Datadog account required for monitoring features
 
 ### Data Validation
 - ✅ All form fields undergo comprehensive validation
@@ -380,12 +502,62 @@ All API responses follow this consistent structure:
 }
 ```
 
+### Monitoring & Alerts
+- ✅ All API requests are automatically logged and monitored
+- ✅ Database query performance is tracked
+- ✅ Error rates and response times are monitored
+- ✅ Custom business metrics are available in Datadog dashboards
+
+---
+
+## 📦 Dependencies
+
+### Core Dependencies
+```txt
+Django==5.2.4
+djangorestframework
+django-cors-headers
+python-decouple
+psycopg2-binary
+gunicorn
+python-json-logger
+ddtrace  # Datadog APM
+```
+
+### Development Dependencies
+```txt
+pytest
+pytest-django
+coverage
+black  # Code formatting
+flake8  # Code linting
+```
+
+---
+
+## 📞 Support & Contributing
+
+### Getting Help
+- 📧 **Email**: saikrishnadandu9@gmail.com
+- 📊 **Monitoring**: Check Datadog dashboard for system health
+
+### Code Style
+- Follow PEP 8 guidelines
+- Use meaningful variable names
+- Add docstrings to functions
+- Include logging for important operations
+- Write tests for new features
+
 ---
 
 
-## 📞 Support
+## 🚀 Roadmap
 
-For support and questions:
+### Current Sprint
+- ✅ Basic form submission APIs
+- ✅ PostgreSQL integration
+- ✅ Docker containerization
+- ✅ Datadog monitoring integration
+- ✅ AWS deployment guide
 
-- 📧 **Email**: saikrishnadandu9@gmai.com
 

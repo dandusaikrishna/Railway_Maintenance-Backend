@@ -3,11 +3,18 @@ version: '3.8'
 services:
   web:
     build: .
-    command: gunicorn kpa_project.wsgi:application --bind 0.0.0.0:8000 --workers 3
+    command: gunicorn kpa_project.wsgi:application --bind 0.0.0.0:8000 --workers 3 --timeout 120 --log-level info
     ports:
       - "8000:8000"
     env_file:
       - .env
+    depends_on:
+      - datadog-agent
+    volumes:
+      # Mount logs directory to persist logs outside container
+      - ./logs:/app/logs
+    labels:
+      com.datadoghq.ad.logs: '[{"source": "python", "service": "kpa-django-app", "log_processing_rules": [{"type": "multi_line", "name": "log_start_with_date", "pattern": "\\d{4}-\\d{2}-\\d{2}"}], "processors": [{"type": "status-remapper", "sources": ["levelname"]}]}]'
     environment:
       - DEBUG=${DEBUG}
       - SECRET_KEY=${SECRET_KEY}
@@ -16,3 +23,33 @@ services:
       - DB_PASSWORD=${DB_PASSWORD}
       - DB_HOST=${DB_HOST}
       - DB_PORT=${DB_PORT}
+      - DD_ENV=${DD_ENV}
+      - DD_SERVICE=${DD_SERVICE}
+      - DD_VERSION=${DD_VERSION}
+      - DD_AGENT_HOST=datadog-agent  # Use service name instead of localhost
+      - DD_AGENT_PORT=${DD_AGENT_PORT}
+
+  datadog-agent:
+    image: datadog/agent:latest
+    environment:
+      - DD_API_KEY=${DD_API_KEY}
+      - DD_APM_ENABLED=true
+      - DD_LOGS_ENABLED=true
+      - DD_PROCESS_AGENT_ENABLED=false  # Disable to reduce warnings
+      - DD_SITE=${DD_SITE}
+      - DD_LOG_LEVEL=warn  # Only warnings and errors
+      - DD_DOGSTATSD_NON_LOCAL_TRAFFIC=true
+      # Enable container log collection
+      - DD_LOGS_CONFIG_CONTAINER_COLLECT_ALL=true
+      - DD_AC_EXCLUDE="name:datadog-agent"  # Don't collect agent's own logs
+      # Disable workloadmeta to reduce warnings in Docker
+      - DD_WORKLOADMETA_ENABLED=false
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /proc/:/host/proc/:ro
+      - /sys/fs/cgroup/:/host/sys/fs/cgroup:ro
+      # Mount logs directory so Datadog can read log files
+      - ./logs:/app/logs:ro
+    ports:
+      - "8126:8126"  # APM
+      - "8125:8125"  # DogStatsD

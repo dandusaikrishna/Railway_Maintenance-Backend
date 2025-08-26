@@ -7,7 +7,7 @@ import time
 import logging
 from django.utils.deprecation import MiddlewareMixin
 
-# Get logger
+# Get logger - only use one logger to avoid duplicates
 logger = logging.getLogger('django.request')
 
 class RequestResponseLoggingMiddleware(MiddlewareMixin):
@@ -20,11 +20,13 @@ class RequestResponseLoggingMiddleware(MiddlewareMixin):
         request.start_time = time.time()
         
         # Log basic request info
-        logger.info(
+        log_message = (
             f"REQUEST || METHOD: {request.method} || PATH: {request.path} || "
             f"CLIENT_IP: {self._get_client_ip(request)} || "
             f"USER_AGENT: {request.META.get('HTTP_USER_AGENT', '')}"
         )
+        
+        logger.info(log_message)
         
         return None
     
@@ -35,12 +37,14 @@ class RequestResponseLoggingMiddleware(MiddlewareMixin):
         
         response_time = time.time() - request.start_time
         
-        logger.info(
+        log_message = (
             f"RESPONSE || METHOD: {request.method} || PATH: {request.path} || "
             f"STATUS: {response.status_code} || "
             f"TIME: {response_time:.4f}s || "
             f"CLIENT_IP: {self._get_client_ip(request)}"
         )
+        
+        logger.info(log_message)
         
         return response
     
@@ -48,7 +52,7 @@ class RequestResponseLoggingMiddleware(MiddlewareMixin):
         """Log exceptions that occur during request processing."""
         response_time = time.time() - request.start_time if hasattr(request, 'start_time') else 0
         
-        logger.error(
+        log_message = (
             f"EXCEPTION || METHOD: {request.method} || PATH: {request.path} || "
             f"EXCEPTION_TYPE: {type(exception).__name__} || "
             f"EXCEPTION_MSG: {str(exception)} || "
@@ -56,8 +60,8 @@ class RequestResponseLoggingMiddleware(MiddlewareMixin):
             f"CLIENT_IP: {self._get_client_ip(request)}"
         )
         
-        return None
-    
+        logger.error(log_message)
+        
     def _get_client_ip(self, request):
         """Extract client IP address from request."""
         x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')

@@ -57,7 +57,7 @@ LOGGING = {
         'django.file': {
             'level': 'INFO',
             'class': 'logging.handlers.RotatingFileHandler',
-            'formatter': 'json',  # Changed to JSON
+            'formatter': 'json', 
             'filename': str(LOG_BASE_PATH / 'django.log'),
             'maxBytes': 10 * 1024 * 1024,  # 10 MB
             'backupCount': 5,
@@ -65,7 +65,7 @@ LOGGING = {
         'requests.file': {
             'level': 'INFO',
             'class': 'logging.handlers.RotatingFileHandler',
-            'formatter': 'json',  # Changed to JSON
+            'formatter': 'json',
             'filename': str(LOG_BASE_PATH / 'requests.log'),
             'maxBytes': 10 * 1024 * 1024,  # 10 MB
             'backupCount': 5,
@@ -73,32 +73,32 @@ LOGGING = {
         'errors.file': {
             'level': 'ERROR',
             'class': 'logging.handlers.RotatingFileHandler',
-            'formatter': 'json',  # Changed to JSON
+            'formatter': 'json', 
             'filename': str(LOG_BASE_PATH / 'errors.log'),
-            'maxBytes': 10 * 1024 * 1024,  # 10 MB
+            'maxBytes': 10 * 1024 * 1024,  
             'backupCount': 5,
         },
         'forms_api.file': {
             'level': 'INFO',
             'class': 'logging.handlers.RotatingFileHandler',
-            'formatter': 'json',  # Changed to JSON
+            'formatter': 'json',
             'filename': str(LOG_BASE_PATH / 'forms_api.log'),
-            'maxBytes': 10 * 1024 * 1024,  # 10 MB
+            'maxBytes': 10 * 1024 * 1024,  
             'backupCount': 5,
         },
         'database.file': {
             'level': 'INFO',
             'class': 'logging.handlers.RotatingFileHandler',
-            'formatter': 'json',  # Changed to JSON
+            'formatter': 'json',  
             'filename': str(LOG_BASE_PATH / 'database.log'),
-            'maxBytes': 10 * 1024 * 1024,  # 10 MB
+            'maxBytes': 10 * 1024 * 1024,  
             'backupCount': 5,
         },
         'mail_admins': {
             'level': 'ERROR',
             'class': 'django.utils.log.AdminEmailHandler',
             'filters': ['require_debug_false'],
-            'formatter': 'verbose',  # Keep verbose for email
+            'formatter': 'verbose', 
             'include_html': True,
         },
     },

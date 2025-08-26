@@ -131,8 +131,6 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-from .logging_config import LOGGING, DD_TRACE_AUTO_INSTRUMENTATION
-
 DATADOG_TRACE = {
     "DEFAULT_SERVICE": config("DD_SERVICE", default="kpa-django-app"),
     "TAGS": {"env": config("DD_ENV", default="development")},

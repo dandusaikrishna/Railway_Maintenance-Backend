@@ -1,6 +1,6 @@
 """
 Simple logging middleware for KPA Django project.
-Logs incoming requests and outgoing responses.
+Logs incoming requests and outgoing responses with proper status levels.
 """
 
 import time
@@ -31,7 +31,7 @@ class RequestResponseLoggingMiddleware(MiddlewareMixin):
         return None
     
     def process_response(self, request, response):
-        """Log outgoing response details."""
+        """Log outgoing response details with appropriate log level."""
         if not hasattr(request, 'start_time'):
             return response
         
@@ -44,7 +44,13 @@ class RequestResponseLoggingMiddleware(MiddlewareMixin):
             f"CLIENT_IP: {self._get_client_ip(request)}"
         )
         
-        logger.info(log_message)
+        # Use appropriate log level based on HTTP status code
+        if response.status_code >= 500:
+            logger.error(log_message)
+        elif response.status_code >= 400:
+            logger.warning(log_message)
+        else:
+            logger.info(log_message)
         
         return response
     

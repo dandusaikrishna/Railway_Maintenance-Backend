@@ -41,7 +41,6 @@ services:
       # Enable container log collection
       - DD_LOGS_CONFIG_CONTAINER_COLLECT_ALL=true
       - DD_AC_EXCLUDE="name:datadog-agent"  # Don't collect agent's own logs
-      # Disable workloadmeta to reduce warnings in Docker
       - DD_WORKLOADMETA_ENABLED=false
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro

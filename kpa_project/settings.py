@@ -130,3 +130,10 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+DATADOG_TRACE = {
+    "DEFAULT_SERVICE": config("DD_SERVICE", default="kpa-django-app"),
+    "TAGS": {"env": config("DD_ENV", default="development")},
+    "AGENT_HOSTNAME": config("DD_AGENT_HOST", default="127.0.0.1"),
+    "AGENT_PORT": config("DD_AGENT_PORT", default=8126, cast=int),
+}

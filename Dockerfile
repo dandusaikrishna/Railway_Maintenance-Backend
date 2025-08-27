@@ -15,13 +15,14 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy project code
 COPY . .
-RUN chown -R appuser:appuser /app
+
+# Create logs directory and set proper permissions
+RUN mkdir -p /app/logs && chown -R appuser:appuser /app
 
 # Switch to non-root user
 USER appuser
 
 EXPOSE 8000
 
-# Gunicorn command (fixed newline issue)
-CMD ["gunicorn", "--bind", "0.0.0.0:8000", "kpa_project.wsgi:application", "--workers", "1", "--timeout", "120"]
-
+# Run with ddtrace so Datadog can auto-instrument Django + Gunicorn
+CMD ["ddtrace-run", "gunicorn", "--bind", "0.0.0.0:8000", "kpa_project.wsgi:application", "--workers", "3", "--timeout", "120"]

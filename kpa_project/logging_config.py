@@ -1,6 +1,6 @@
 """
 Logging configuration for KPA Django project.
-Comprehensive logging with email notifications and log rotation.
+Comprehensive logging with JSON formatting for better Datadog integration.
 """
 
 import os
@@ -27,6 +27,10 @@ LOGGING = {
         },
     },
     "formatters": {
+        "json": {
+            "()": "pythonjsonlogger.jsonlogger.JsonFormatter",
+            "format": "%(asctime)s %(levelname)s %(name)s %(pathname)s %(filename)s %(module)s %(funcName)s %(lineno)d %(message)s"
+        },
         "verbose": {
             "format": "||".join([
                 "CREATED ON: %(asctime)s",
@@ -48,53 +52,53 @@ LOGGING = {
         'console': {
             'level': 'INFO',
             'class': 'logging.StreamHandler',
-            'formatter': 'verbose'
+            'formatter': 'json'  # Changed to JSON
         },
         'django.file': {
             'level': 'INFO',
             'class': 'logging.handlers.RotatingFileHandler',
-            'formatter': 'verbose',
-            'filename': LOG_BASE_PATH / 'django.log',
+            'formatter': 'json', 
+            'filename': str(LOG_BASE_PATH / 'django.log'),
             'maxBytes': 10 * 1024 * 1024,  # 10 MB
             'backupCount': 5,
         },
         'requests.file': {
             'level': 'INFO',
             'class': 'logging.handlers.RotatingFileHandler',
-            'formatter': 'verbose',
-            'filename': LOG_BASE_PATH / 'requests.log',
+            'formatter': 'json',
+            'filename': str(LOG_BASE_PATH / 'requests.log'),
             'maxBytes': 10 * 1024 * 1024,  # 10 MB
             'backupCount': 5,
         },
         'errors.file': {
             'level': 'ERROR',
             'class': 'logging.handlers.RotatingFileHandler',
-            'formatter': 'verbose',
-            'filename': LOG_BASE_PATH / 'errors.log',
-            'maxBytes': 10 * 1024 * 1024,  # 10 MB
+            'formatter': 'json', 
+            'filename': str(LOG_BASE_PATH / 'errors.log'),
+            'maxBytes': 10 * 1024 * 1024,  
             'backupCount': 5,
         },
         'forms_api.file': {
             'level': 'INFO',
             'class': 'logging.handlers.RotatingFileHandler',
-            'formatter': 'verbose',
-            'filename': LOG_BASE_PATH / 'forms_api.log',
-            'maxBytes': 10 * 1024 * 1024,  # 10 MB
+            'formatter': 'json',
+            'filename': str(LOG_BASE_PATH / 'forms_api.log'),
+            'maxBytes': 10 * 1024 * 1024,  
             'backupCount': 5,
         },
         'database.file': {
             'level': 'INFO',
             'class': 'logging.handlers.RotatingFileHandler',
-            'formatter': 'verbose',
-            'filename': LOG_BASE_PATH / 'database.log',
-            'maxBytes': 10 * 1024 * 1024,  # 10 MB
+            'formatter': 'json',  
+            'filename': str(LOG_BASE_PATH / 'database.log'),
+            'maxBytes': 10 * 1024 * 1024,  
             'backupCount': 5,
         },
         'mail_admins': {
             'level': 'ERROR',
             'class': 'django.utils.log.AdminEmailHandler',
             'filters': ['require_debug_false'],
-            'formatter': 'verbose',
+            'formatter': 'verbose', 
             'include_html': True,
         },
     },
@@ -105,7 +109,7 @@ LOGGING = {
             'propagate': True,
         },
         'django.request': {
-            'handlers': ['console', 'requests.file', 'mail_admins'],
+            'handlers': ['console', 'requests.file'],  # Added console for debugging
             'level': 'INFO',
             'propagate': False,
         },
@@ -142,3 +146,5 @@ LOGGING = {
         },
     },
 }
+
+DD_TRACE_AUTO_INSTRUMENTATION = False

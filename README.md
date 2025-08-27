@@ -16,7 +16,7 @@
 |----------|------|-------------|
 | 🚀 **Setup & Development** | [Watch Now](https://drive.google.com/file/d/17QCv4pfbuGwF-YY-i1CHJYKyUKcSJ8ya/view?usp=sharing) | Initial setup, configuration & API testing |
 | 🐳 **Docker & AWS Deployment** | [Watch Now](https://drive.google.com/file/d/1pbGgeTAep39GuDYdNK1tmojN1PWTQ1Fv/view?usp=drive_link) | Containerization, AWS deployment & logging |
-
+| 📊 **Datadog Integration** | [Watch Now](https://drive.google.com/file/d/1pbGgeTAep39GuDYdNK1tmojN1PWTQ1Fv/view?usp=sharing) | Real-time monitoring & log analytics setup |
 ---
 
 ## 🎯 Overview

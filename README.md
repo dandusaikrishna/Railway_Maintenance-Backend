@@ -288,8 +288,8 @@ kpa-forms-api/
 }
 ```
 
----
 
+---
 ## 📊 Monitoring & Logging
 
 ### Datadog Integration
@@ -300,6 +300,15 @@ The application includes comprehensive monitoring and logging through Datadog:
 - **Log Management** - Centralized logging with structured JSON format
 - **Error Tracking** - Automatic error detection and alerting
 - **Custom Metrics** - Business-specific metrics and dashboards
+
+### 📸 Live Monitoring Screenshots
+
+| Monitoring View | Screenshot | Description |
+|----------------|------------|-------------|
+| 📊 **Datadog Dashboard** | <img width="600" alt="Datadog Dashboard" src="https://github.com/user-attachments/assets/321b0eb6-3f32-43e6-9e64-e4918b7cea68" /> | Real-time application metrics and performance |
+| 🔍 **APM Traces** | <img width="600" alt="APM Traces" src="https://github.com/user-attachments/assets/e5c0c96b-9a1e-443b-afe5-41301d10b785" /> | Request tracing and performance analysis |
+| ⚠️ **Error Tracking** | <img width="600" alt="Error Alerts" src="https://github.com/user-attachments/assets/e012ced0-21b9-42fc-bbce-2653a79f9453" /> | Automated error detection and alerting |
+| ⚠️ **Warning Logs** | <img width="600" alt="Warning Logs" src="https://github.com/user-attachments/assets/56768d53-c63d-44ac-83ac-c784f1699d4e" /> | Real-time warning and info log monitoring |
 
 ### Log Categories
 
@@ -325,6 +334,7 @@ DD_SITE=datadoghq.com
 ```
 
 ---
+
 
 ## 🌩️ AWS Deployment
 
@@ -430,50 +440,6 @@ coverage report
 |----------|------|-------------|
 | 📮 **Postman Collection** | [Download](https://drive.google.com/file/d/1-A6R_Paf6DYv2s4L8zza_fCkPygGduqf/view) | Complete API testing collection |
 | 📊 **Datadog Dashboard** | [View Dashboard](https://app.datadoghq.com) | Production monitoring dashboard |
-
----
-
-## 🔧 Development
-
-### Local Development with Monitoring
-
-```bash
-# Start with local Datadog agent
-docker-compose -f docker-compose.dev.yml up
-
-# Or start without monitoring
-python manage.py runserver
-```
-
-### Adding New Form Types
-
-1. Create model in `models.py`
-2. Add serializer in `serializers.py`
-3. Create validation logic in `helpers/validation.py`
-4. Add API views in `views.py`
-5. Update URL routing in `urls.py`
-6. Add logging statements for monitoring
-
-### Logging Best Practices
-
-```python
-import logging
-
-# Get logger for your module
-logger = logging.getLogger('forms_api')
-
-# Log important events
-logger.info("Processing form submission", extra={
-    'form_number': form_number,
-    'user_id': user_id
-})
-
-# Log errors with context
-logger.error("Form validation failed", extra={
-    'form_number': form_number,
-    'errors': validation_errors
-})
-```
 
 ---
 

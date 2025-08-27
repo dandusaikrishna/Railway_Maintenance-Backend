@@ -19,19 +19,34 @@
 | 📊 **Datadog Integration** | [Watch Now](https://drive.google.com/file/d/1pbGgeTAep39GuDYdNK1tmojN1PWTQ1Fv/view?usp=sharing) | Real-time monitoring & log analytics setup |
 ---
 
-## 🎯 Overview
+## Overview
 
 The **KPA Forms API** is a robust Django REST Framework backend designed specifically for railway maintenance operations. It provides structured APIs to handle and validate critical maintenance forms including bogie checksheets and wheel specifications, ensuring data integrity and compliance with railway standards.
 
-### ✨ Key Highlights
+## Key Differentiators
 
-- **🔒 Comprehensive Validation** - Custom validation logic for all railway-specific form fields
-- **🏗️ Modular Architecture** - Clean separation of concerns with Django apps
-- **🐘 PostgreSQL Integration** - Reliable data storage with advanced querying capabilities  
-- **🐳 Containerized Deployment** - Docker-ready with production configurations
-- **📊 Advanced Monitoring** - Integrated Datadog APM and logging for production insights
-- **☁️ Cloud-Native** - Optimized for AWS EC2 and RDS deployment
-- **📋 API Documentation** - Complete Postman collection with examples
+### Beyond Basic CRUD
+- **Railway Domain Expertise**: Understanding of engineering tolerances and maintenance workflows
+- **Production-Ready Architecture**: Full monitoring, logging, and deployment pipeline
+- **Comprehensive Testing**: API testing suite with edge cases
+- **Documentation Quality**: Clear setup instructions and video walkthroughs
+
+### Technical Depth
+- **Custom Middleware**: Request/response logging and timing
+- **Advanced Querying**: Optimized database queries with proper indexing
+- **Error Recovery**: Graceful handling of database connection issues
+- **Monitoring Integration**: Real-time application health tracking
+
+### Key Highlights
+
+- **Comprehensive Validation** - Custom validation logic for all railway-specific form fields
+- **Modular Architecture** - Clean separation of concerns with Django apps
+- **PostgreSQL Integration** - Reliable data storage with advanced querying capabilities  
+- **Containerized Deployment** - Docker-ready with production configurations
+- **Advanced Monitoring** - Integrated Datadog APM and logging for production insights
+- **Cloud-Native** - Optimized for AWS EC2 and RDS deployment
+- **API Documentation** - Complete Postman collection with examples
+
 
 ---
 
@@ -150,9 +165,10 @@ docker-compose up --build
 
 ## 🏗️ Project Architecture
 
+
 ```
 kpa-forms-api/
-├── 📁 forms_api/                    # Core Django app
+├── forms_api/                       # Core Django app
 │   ├──  helpers/                    # Utility functions
 │   │   ├── validation.py            # Form validation logic
 │   │   └── response_formatter.py    # API response formatting
@@ -161,22 +177,23 @@ kpa-forms-api/
 │   ├──  serializers.py              # API serializers
 │   ├──  urls.py                     # URL routing
 │   ├──  views.py                    # API view classes
-│   └── 🧪 tests.py                  # Unit tests
-├── ⚙️ kpa_project/                  # Django project settings
+│   └──  tests.py                    # Unit tests
+├── kpa_project/                     # Django project settings
 │   ├── logging_config.py            # Comprehensive logging setup
 │   ├── middleware.py                # Request/Response logging
 │   └── settings.py                  # Django configuration
-├── 📁 logs/                         # Application logs
+├── logs/                            # Application logs
 │   ├── django.log                   # General Django logs
 │   ├── requests.log                 # HTTP request logs
 │   ├── forms_api.log               # API-specific logs
 │   ├── database.log                # Database query logs
 │   └── errors.log                  # Error logs
-├── 🐳 Dockerfile                    # Container configuration
-├── 🔧 docker-compose.yml            # Multi-container setup with Datadog
-├── 📋 requirements.txt              # Python dependencies
-└── 📖 README.md                     # Project documentation
+├── Dockerfile                       # Container configuration
+├── docker-compose.yml               # Multi-container setup with Datadog
+├── requirements.txt                 # Python dependencies
+└── README.md                        # Project documentation
 ```
+
 
 ---
 
@@ -301,7 +318,10 @@ The application includes comprehensive monitoring and logging through Datadog:
 - **Error Tracking** - Automatic error detection and alerting
 - **Custom Metrics** - Business-specific metrics and dashboards
 
-### 📸 Live Monitoring Screenshots
+### Live Monitoring Screenshots
+
+> **Real Production Environment**: These screenshots demonstrate the live Datadog monitoring setup running on AWS EC2, showing actual application metrics, traces, and log streams in real-time.
+
 
 | Monitoring View | Screenshot | Description |
 |----------------|------------|-------------|

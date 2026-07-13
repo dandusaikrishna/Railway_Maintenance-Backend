@@ -1,5 +1,5 @@
 """
-Validation helper functions for KPA Forms API
+Validation helper functions for Forms API
 """
 from datetime import datetime
 import re
@@ -31,8 +31,6 @@ def validate_form_number(form_number):
     """Validate form number format"""
     if not form_number:
         return False, "Form number is required"
-    
-    # Basic validation - can be enhanced based on specific requirements
     if len(form_number) < 3:
         return False, "Form number is too short"
     

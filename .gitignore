@@ -5,8 +5,7 @@ __pycache__/
 .cache
 .pytest_cache/
 
-
-# Django stuff:
+# Django:
 local_settings.py
 db.sqlite3
 

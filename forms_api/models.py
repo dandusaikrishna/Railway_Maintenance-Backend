@@ -1,14 +1,13 @@
 from django.db import models
 
 class BogieChecksheet(models.Model):
-    # Bogie Details 
+
     bogie_no = models.CharField("Bogie No.", max_length=50)
     date_of_ioh = models.DateField("Date of IOH", null=True, blank=True)
     incoming_div_and_date = models.CharField("Incoming Div. & Date", max_length=100)
     maker_year_built = models.CharField("Maker & Year Built", max_length=100)
     deficit_components = models.TextField("Deficit of component (if any)", blank=True, null=True)
-    
-    # Bogie Checksheet fields 
+
     bogie_frame_condition = models.CharField("Bogie Frame Condition", max_length=50, blank=True, null=True)
     bolster = models.CharField("Bolster", max_length=50, blank=True, null=True)
     bolster_suspension_bracket = models.CharField("Bolster Suspension Bracket", max_length=50, blank=True, null=True)

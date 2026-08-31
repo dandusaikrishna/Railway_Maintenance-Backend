@@ -11,7 +11,6 @@ services:
     depends_on:
       - datadog-agent
     volumes:
-      # Mount logs directory to persist logs outside container
       - ./logs:/app/logs
     labels:
       com.datadoghq.ad.logs: '[{"source": "python", "service": "kpa-django-app", "log_processing_rules": [{"type": "multi_line", "name": "log_start_with_date", "pattern": "\\d{4}-\\d{2}-\\d{2}"}], "processors": [{"type": "status-remapper", "sources": ["levelname"]}]}]'
@@ -26,7 +25,7 @@ services:
       - DD_ENV=${DD_ENV}
       - DD_SERVICE=${DD_SERVICE}
       - DD_VERSION=${DD_VERSION}
-      - DD_AGENT_HOST=datadog-agent  # Use service name instead of localhost
+      - DD_AGENT_HOST=datadog-agent  
       - DD_AGENT_PORT=${DD_AGENT_PORT}
 
   datadog-agent:

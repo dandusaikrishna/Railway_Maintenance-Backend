@@ -138,7 +138,6 @@ LOGGING = {
             'level': 'INFO',
             'propagate': False,
         },
-        # Root logger - catches all unhandled logs
         '': {
             'handlers': ['console', 'errors.file', 'mail_admins'],
             'level': 'ERROR',

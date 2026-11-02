@@ -17,7 +17,7 @@ class Migration(migrations.Migration):
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('bogie_no', models.CharField(max_length=50, verbose_name='Bogie No.')),
                 ('date_of_ioh', models.DateField(blank=True, null=True, verbose_name='Date of IOH')),
-                ('incoming_div_and_date', models.CharField(max_length=100, verbose_name='Incoming Div. & Date')),
+                ('incoming_div_and_date', models.CharField(max_length=50, verbose_name='Incoming Div. & Date')),
                 ('maker_year_built', models.CharField(max_length=100, verbose_name='Maker & Year Built')),
                 ('deficit_components', models.TextField(blank=True, null=True, verbose_name='Deficit of component (if any)')),
                 ('bogie_frame_condition', models.CharField(blank=True, max_length=50, null=True, verbose_name='Bogie Frame Condition')),

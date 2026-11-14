@@ -1,25 +1,29 @@
 FROM python:3.9-slim
 
-# Create non-root user
-RUN useradd --create-home --shell /bin/bash appuser
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PIP_NO_CACHE_DIR=1
+
+# Install system dependencies and create a non-root user
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends gcc libpq-dev \
+    && rm -rf /var/lib/apt/lists/* \
+    && useradd --create-home --shell /bin/bash appuser
 
 WORKDIR /app
 
-# Install system dependencies
-RUN apt-get update && apt-get install -y gcc libpq-dev && rm -rf /var/lib/apt/lists/*
-
-# Copy requirements and install
+# Install Python dependencies
 COPY requirements.txt .
-RUN pip install --upgrade pip
-RUN pip install --no-cache-dir -r requirements.txt
+RUN python -m pip install --upgrade pip \
+    && python -m pip install -r requirements.txt
 
-# Copy project code
-COPY . .
+# Copy project files with the correct ownership
+COPY --chown=appuser:appuser . .
 
-# Create logs directory and set proper permissions
-RUN mkdir -p /app/logs && chown -R appuser:appuser /app
+# Create logs directory and ensure ownership for runtime files
+RUN mkdir -p /app/logs \
+    && chown -R appuser:appuser /app
 
-# Switch to non-root user
 USER appuser
 
 EXPOSE 8000

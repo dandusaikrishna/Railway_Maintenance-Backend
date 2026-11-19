@@ -1,19 +1,48 @@
-# Byte-compiled / optimized
+# Python bytecode and build artifacts
 __pycache__/
+*.py[cod]
+*$py.class
+*.so
+build/
+dist/
+*.egg-info/
+.eggs/
 
-# Unit tests
-.cache
-.pytest_cache/
-
-# Django:
-local_settings.py
-db.sqlite3
-
-# pyenv
-.python-version
-
-# Environments
+# Virtual environments
 .env
-.venv
+.venv/
 env/
 venv/
+
+# Django
+local_settings.py
+*.sqlite3
+*.sqlite3-journal
+media/
+staticfiles/
+
+# Testing and coverage
+.cache/
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+.nox/
+
+# Tooling and environment managers
+.python-version
+.mypy_cache/
+.ruff_cache/
+.dmypy.json
+
+# Editors and operating systems
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Environment and secret files
+*.env
+*.env.*
+!.env.example

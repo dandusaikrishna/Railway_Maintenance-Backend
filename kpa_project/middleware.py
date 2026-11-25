@@ -44,7 +44,7 @@ class RequestResponseLoggingMiddleware(MiddlewareMixin):
             f"CLIENT_IP: {self._get_client_ip(request)}"
         )
         
-        # Use appropriate log level based on HTTP status code
+        # Use appropriate log
         if response.status_code >= 500:
             logger.error(log_message)
         elif response.status_code >= 400:
